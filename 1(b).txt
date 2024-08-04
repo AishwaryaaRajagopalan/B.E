@@ -1,0 +1,17 @@
+def dfs (G, S, dfstree):
+	for n in G[S]:
+		if n not in dfstree:
+			dfstree[n]=S
+			dfs (G,n,dfstree)
+	return dfstree
+graph= {}
+n=int (input ("Enter number of vertices in graph: "))
+for i in range (n):
+	neighbour= []
+	node=input ("Enter name of node: ")
+	neighbour=input ("Enter name of neighbour node:"). split ()
+	graph [node]=neighbour
+S=input ("Enter starting node name:")
+print ("DFS traversal")
+dfstree= {S: None}
+print (dfs (graph,S,dfstree))

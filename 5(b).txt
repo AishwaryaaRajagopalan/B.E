@@ -1,0 +1,51 @@
+import numpy as np
+import pandas as pd
+import math
+import requests
+from matplotlib import pyplot as plt
+import statsmodels.formula.api as smf
+
+# Corrected URL
+remote_url = "http://54.243.252.9/engr-1330-webroot/8-Labs/Lab29/heart.data.csv"
+rget = requests.get(remote_url, allow_redirects=True)
+open('heart.data.csv', 'wb').write(rget.content)
+
+heartattack = pd.read_csv('heart.data.csv')
+data = heartattack.rename(columns={"biking": "Bike", "smoking": "Smoke", "heart.disease": "Disease"})
+print(data.head(3))
+
+# Replace 'Bike' and 'Smoke' with actual column names in your dataset
+model = smf.ols('Disease ~ Bike + Smoke', data=data)
+model = model.fit()
+print(model.summary())
+
+# Calculate attributes
+intercept = model.params.iloc[0]
+slope = model.params.iloc[1]
+rsquare = model.rsquared
+RMSE = math.sqrt(model.mse_total)
+
+# Predict values
+heartfail = model.predict()
+
+# Plot regression against actual data for Biking
+plt.figure(figsize=(12, 6))
+plt.plot(data['Bike'], data['Disease'], 'o')
+plt.plot(data['Bike'], heartfail, marker='s', color='r', linewidth=0)
+plt.xlabel('Biking (miles/week)')
+plt.ylabel('Disease Index (Admissions/100,000 as per MMWR)')
+plt.legend(['Observations', 'Model Prediction'])
+plt.title('Disease Index versus Biking\nR squared = {:.3f}\nRMSE = {:.2f}'.format(rsquare, RMSE))
+plt.show()
+
+# Plot regression against actual data for Smoking
+plt.figure(figsize=(12, 6))
+plt.plot(data['Smoke'], data['Disease'], 'o')
+plt.plot(data['Smoke'], heartfail, marker='s', color='r', linewidth=0)
+plt.xlabel('Smoking (packs/week)')
+plt.ylabel('Disease Index (Admissions/100,000 as per MMWR)')
+plt.legend(['Observations', 'Model Prediction'])
+plt.title('Disease Index versus Smoking\nR squared = {:.3f}\nRMSE = {:.2f}'.format(rsquare, RMSE))
+plt.show()
+
+print(model.summary())

@@ -1,0 +1,25 @@
+def bfs (G, S):
+	visited = []
+	queue = []
+	queue. append (S)
+	visited. append (S)
+	bfstree = []
+	while queue:
+		t = queue.pop (0)
+		bfstree. append (t)
+		for n in G[t]:
+			if n not in visited:
+				visited. append(n)
+				queue. append(n)
+	return bfstree
+graph = {}
+n=int (input ("Enter number of vertices in graph:"))
+for i in range (n):
+	neighbour = []
+	node = input ("Enter name of node: ")
+	neighbour = input ("Enter name of neighbour node "). split ()
+	graph [node]=neighbour
+S=input ("Enter starting node name:")
+print (graph)
+print ("BFS traversal")
+print (bfs (graph,S))
